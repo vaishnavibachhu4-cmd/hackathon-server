@@ -43,6 +43,25 @@ app.use('/api/results', require('./routes/results'));
 app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
 app.get('/', (req, res) => res.send('Server is running! API is available at /api'));
 
+app.get('/api/seed', async (req, res) => {
+  try {
+    const User = require('./models/User');
+    const existing = await User.findOne({ email: 'admin@example.com' });
+    if (existing) return res.send('Admin already exists.');
+    await User.create({
+      name: 'System Admin',
+      email: 'admin@example.com',
+      password: 'adminpassword123',
+      role: 'admin',
+      approvalStatus: 'approved'
+    });
+    res.send('Admin seeded explicitly on production DB! You can now log in.');
+  } catch (err) {
+    res.send('Error seeding admin: ' + err.message);
+  }
+});
+
+
 // Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
