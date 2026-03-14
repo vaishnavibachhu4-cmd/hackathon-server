@@ -35,6 +35,7 @@ app.use('/api/results', require('./routes/results'));
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
+app.get('/', (req, res) => res.send('Server is running! API is available at /api'));
 
 // Error handler
 app.use((err, req, res, next) => {
